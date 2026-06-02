@@ -1,0 +1,59 @@
+/* src/app/pages/auth/login/auth-login.component.scss */
+.auth-shell {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(76, 175, 80, 0.15), transparent 60%),
+              radial-gradient(800px 500px at 100% 0%, rgba(33, 150, 243, 0.15), transparent 60%),
+              #0b1020;
+}
+
+.auth-card {
+  width: min(420px, 92vw);
+  padding: 24px 24px 28px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+
+  h1 {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+
+  mat-icon {
+    color: #3f51b5;
+  }
+}
+
+.full {
+  width: 100%;
+}
+
+.error-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 12px;
+  color: #d32f2f;
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.submit-btn {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

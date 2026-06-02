@@ -1,0 +1,32 @@
+.company-crew-page {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.crew-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.crew-table th,
+.crew-table td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: left;
+}
+
+.crew-table th {
+  background: #1f1f1f;
+}

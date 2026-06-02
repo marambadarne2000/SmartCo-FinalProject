@@ -1,0 +1,51 @@
+<!-- src/app/features/admin/permissions/permissions.component.html -->
+<mat-card>
+  <h2 class="title">
+    <mat-icon>tune</mat-icon>
+    Manage Role Permissions
+  </h2>
+<!-- Loading state -->
+<div *ngIf="loading()" class="state">Loading…</div>
+<div *ngIf="!loading() && error()" class="state error">{{ error() }}</div>
+
+<!-- Main content -->
+<div *ngIf="!loading() && !error()">
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="saveAll()">
+      <mat-icon>save</mat-icon>
+      Save All
+    </button>
+  </div>
+
+  <div class="table-wrap" *ngFor="let group of groupedPerms()">
+    <h3>{{ group.module | titlecase }}</h3>
+
+    <table mat-table [dataSource]="group.actions" class="mat-elevation-z1">
+      <!-- Action -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let p"> {{ p.action }} </td>
+      </ng-container>
+
+      <!-- Dynamic columns for roles -->
+      <ng-container *ngFor="let r of roles()" [matColumnDef]="'role_' + r.id">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ r.name }}
+          <button mat-icon-button (click)="saveRole(r.id)" matTooltip="Save this role only">
+            <mat-icon>save</mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let p">
+          <mat-checkbox
+            [checked]="has(r.id, p.id)"
+            (change)="toggle(r.id, p.id, $event)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+</mat-card>

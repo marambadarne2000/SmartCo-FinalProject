@@ -1,0 +1,58 @@
+<div class="chat-wrap">
+  <div class="chat-header">
+    <div class="title">Task Conversation #{{ taskId }}</div>
+    <div class="participants">
+      <span *ngFor="let p of participants" class="pill" [title]="p.email">
+        {{ p.name }} <small *ngIf="p.role_hint">({{ p.role_hint }})</small>
+      </span>
+    </div>
+  </div>
+
+  <div class="messages" id="msgBox" (scroll)="onScroll($event)">
+    <div *ngIf="loadErr" class="load-more" style="color:#d32f2f; border-color:#ffcdd2; background:#fff5f5;">
+      {{ loadErr }}
+      <button class="load-more" style="margin-top:6px" (click)="loadLatest()">Retry</button>
+    </div>
+
+    <button *ngIf="hasMore" class="load-more" (click)="loadOlder()">Load Older Messages</button>
+
+    <div *ngIf="!messages.length && !loadErr" class="load-more" style="cursor:default">
+      No messages yet — start the conversation 👋
+    </div>
+
+    <ng-container *ngFor="let m of messages; trackBy: trackById">
+      <div class="msg" [class.me]="isMine(m)">
+        <div class="bubble" [class.file]="m.type === 'file'">
+          <ng-container [ngSwitch]="m.type">
+            <span *ngSwitchCase="'text'">{{ m.text }}</span>
+            <!-- כאן נפתח את הקובץ בחלון חדש -->
+<a href="#" *ngSwitchCase="'file'" (click)="openFile(m.file_url); $event.preventDefault()" style="cursor:pointer;">
+  📎 File
+</a>            <span *ngSwitchDefault>—</span>
+          </ng-container>
+          <div class="meta">
+            <span class="time">{{ m.created_at | date:'short' }}</span>
+            <span *ngIf="m.read_by_me" class="read">Seen</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="composer">
+    <input
+      type="text"
+      [(ngModel)]="text"
+      placeholder="Write a message..."
+      (keyup.enter)="sendText()"
+      [disabled]="sending"
+      aria-label="Write a message"
+    />
+    <label class="file-btn" title="Upload File">
+      Upload File
+      <input id="chatFile" type="file" (change)="onFilePicked($event)" accept="*/*" />
+    </label>
+    <button (click)="sendFile()" [disabled]="!file || sending" aria-label="Send File">Send File</button>
+    <button class="send" (click)="sendText()" [disabled]="!text.trim() || sending" aria-label="Send">Send</button>
+  </div>
+</div>

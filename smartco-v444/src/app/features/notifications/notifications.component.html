@@ -1,0 +1,30 @@
+<mat-card>
+  <h2>
+    <mat-icon>notifications</mat-icon>
+    Notifications
+  </h2>
+
+  <div *ngIf="loading">Loading…</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <mat-list *ngIf="!loading && !error">
+    <mat-list-item *ngFor="let n of notifications" [class.read]="n.read">
+      <mat-icon matListItemIcon>
+        {{ n.read ? 'notifications_none' : 'notifications_active' }}
+      </mat-icon>
+
+      <div matListItemTitle>
+        {{ n.message }}
+        <a *ngIf="n.link" mat-mini-button color="accent" [href]="n.link" target="_blank" style="margin-left: 8px;">
+          Go to link
+        </a>
+      </div>
+
+      <div matListItemLine>{{ n.type | titlecase }} • {{ n.created_at | date:'short' }}</div>
+
+      <button mat-mini-button color="primary" *ngIf="!n.read" (click)="markAsRead(n.id)">
+        Mark as read
+      </button>
+    </mat-list-item>
+  </mat-list>
+</mat-card>

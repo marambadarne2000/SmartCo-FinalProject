@@ -1,0 +1,85 @@
+<div class="employee-details-page">
+  <div class="page-header">
+    <h1>Employee Details</h1>
+    <button mat-stroked-button color="primary" (click)="reloadAttendance()">Refresh</button>
+  </div>
+
+  <section class="card">
+    <h2>Employee Info</h2>
+    <mat-progress-spinner
+      *ngIf="loadingDetails"
+      mode="indeterminate"
+      diameter="32">
+    </mat-progress-spinner>
+
+    <div *ngIf="!loadingDetails" class="info-grid">
+      <p><strong>ID:</strong> {{ details?.id ?? employeeId ?? '-' }}</p>
+      <p><strong>Name:</strong> {{ details?.name ?? '-' }}</p>
+      <p><strong>Email:</strong> {{ details?.email ?? '-' }}</p>
+      <p><strong>Role:</strong> {{ details?.role_name || details?.role_slug || '-' }}</p>
+      <p><strong>Hourly Rate:</strong> {{ (details?.hourly_rate ?? 0) | number:'1.2-2' }}</p>
+      <p><strong>Started Work:</strong> {{ details?.started_at || '-' }}</p>
+      <p><strong>Ended Work:</strong> {{ details?.ended_at || '-' }}</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Filter</h2>
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <input matInput type="number" [(ngModel)]="year" (change)="reloadAttendance()" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Month</mat-label>
+        <input matInput type="number" min="1" max="12" [(ngModel)]="month" (change)="reloadAttendance()" />
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Attendance</h2>
+    <mat-progress-spinner
+      *ngIf="loadingAttendance"
+      mode="indeterminate"
+      diameter="32">
+    </mat-progress-spinner>
+
+    <p *ngIf="!loadingAttendance && !backendAttendanceReady" class="warning">
+      Attendance API is not ready yet in backend. Frontend is prepared and waiting for backend endpoint.
+    </p>
+
+    <table *ngIf="!loadingAttendance && backendAttendanceReady && attendanceRows.length" class="attendance-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Day</th>
+          <th>First Start</th>
+          <th>Last End</th>
+          <th>Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of attendanceRows">
+          <td>{{ row.date }}</td>
+          <td>{{ row.day_name || '-' }}</td>
+          <td>{{ row.first_start || '-' }}</td>
+          <td>{{ row.last_end || '-' }}</td>
+          <td>{{ row.hours | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!loadingAttendance && backendAttendanceReady && !attendanceRows.length">
+      No attendance rows for selected month.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Summary</h2>
+    <p><strong>Total Days:</strong> {{ totalDays() }}</p>
+    <p><strong>Total Hours:</strong> {{ totalHours() | number:'1.2-2' }}</p>
+    <p><strong>Estimated Pay:</strong> {{ estimatedPay() | currency:'ILS':'symbol':'1.2-2' }}</p>
+  </section>
+</div>

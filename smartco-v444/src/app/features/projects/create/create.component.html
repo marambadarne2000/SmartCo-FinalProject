@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>New Project</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()" class="form">
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name">
+    <mat-error *ngIf="form.controls.name.hasError('required')">Required</mat-error>
+    <mat-error *ngIf="form.controls.name.hasError('minlength')">Min 3 chars</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Description</mat-label>
+    <textarea matInput rows="3" formControlName="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="half">
+    <mat-label>Due date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="due_date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Members (max 10)</mat-label>
+    <mat-select formControlName="members" multiple>
+      <mat-select-trigger>
+        {{ form.value.members?.length || 0 }} selected
+      </mat-select-trigger>
+      <mat-option *ngFor="let u of users()" [value]="u.id">
+        {{u.name}} — {{u.email}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="actions">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading()">Create</button>
+  </div>
+</form>

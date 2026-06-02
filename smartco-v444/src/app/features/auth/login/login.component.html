@@ -1,0 +1,100 @@
+<!-- src/app/features/auth/login/login.component.html -->
+<div class="auth-shell">
+  <mat-card class="auth-card">
+    <div class="brand">
+      <mat-icon>bolt</mat-icon>
+      <h1>SmartCo</h1>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="on" novalidate>
+      <!-- שדה אימייל -->
+      <!-- Email field, user must enter their email address -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          required
+          spellcheck="false"
+          inputmode="email"
+        />
+        <!-- התראה אם האימייל לא הוזן כראוי -->
+        <mat-error *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
+          Enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <!-- שדה סיסמה -->
+      <!-- Password field, user must enter their password -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'" 
+          formControlName="password"
+          autocomplete="current-password"
+          required
+          (keydown.enter)="submit()"
+        />
+        <button
+          mat-icon-button
+          type="button"
+          matSuffix
+          (click)="hide = !hide" 
+          [attr.aria-label]="'Toggle password visibility'"
+          [attr.aria-pressed]="!hide"
+        >
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <!-- התראה אם הסיסמה לא הוזנה כראוי -->
+        <mat-error *ngIf="form.controls.password.touched && form.controls.password.hasError('required')">
+          Password is required
+        </mat-error>
+        <mat-error *ngIf="form.controls.password.touched && form.controls.password.hasError('minlength')">
+          Min 6 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- הודעת שגיאה (משרת) -->
+      <!-- Server-side error message if login fails -->
+      <div class="error-text" *ngIf="errorMsg()">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMsg() }}</span>
+      </div>
+
+      <!-- כפתור שליחה -->
+      <!-- Submit button to submit the form -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="full submit-btn"
+        type="submit"
+        [disabled]="loading()"
+      >
+        <mat-progress-spinner
+          *ngIf="loading()"
+          mode="indeterminate"
+          diameter="18"
+        ></mat-progress-spinner>
+        <span *ngIf="!loading()">Sign in</span>
+      </button>
+
+<button
+  mat-stroked-button
+  color="accent"
+  class="full"
+  type="button"  
+  (click)="forgotPassword()"  
+  [disabled]="loading()"
+>
+  Forgot Password?
+</button>
+
+    </form>
+  </mat-card>
+      

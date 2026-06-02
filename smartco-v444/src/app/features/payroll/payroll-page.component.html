@@ -1,0 +1,189 @@
+<h2>Payroll</h2>
+
+<form [formGroup]="form" class="grid" novalidate>
+  <mat-card class="row">
+    <div class="col">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Employee</mat-label>
+        <mat-select formControlName="employee_id" aria-label="Employee">
+          <mat-option *ngIf="loadingEmployees()" disabled>Loading...</mat-option>
+          <mat-option *ngFor="let e of employees()" [value]="e.id">
+            {{ e.name }} - {{ e.email }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col small">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Year</mat-label>
+        <mat-select formControlName="period_year">
+          <mat-option *ngFor="let y of years" [value]="y">{{ y }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col small">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Month</mat-label>
+        <mat-select formControlName="period_month">
+          <mat-option *ngFor="let m of months" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-card>
+
+  <mat-card class="row" *ngIf="attendance()">
+    <div class="col">
+      <h3>Monthly Attendance</h3>
+      <p><strong>Work Days:</strong> {{ attendance()!.total_days }}</p>
+      <p><strong>Total Hours:</strong> {{ attendance()!.total_hours | number:'1.2-2' }}</p>
+      <p><strong>Regular Salary:</strong> {{ attendance()!.estimated_pay | number:'1.2-2' }}</p>
+    </div>
+  </mat-card>
+
+  <mat-card class="row">
+    <div class="col">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Regular Salary From Attendance</mat-label>
+        <input matInput type="number" formControlName="base" min="0" readonly />
+      </mat-form-field>
+    </div>
+
+    <div class="col small">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Overtime Hours</mat-label>
+        <input matInput type="number" formControlName="overtime_hours" min="0" />
+      </mat-form-field>
+    </div>
+
+    <div class="col small">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Overtime Rate</mat-label>
+        <input matInput type="number" formControlName="overtime_rate" min="0" />
+      </mat-form-field>
+    </div>
+  </mat-card>
+
+  <mat-card class="row">
+    <div class="col">
+      <h3>Allowances</h3>
+
+      <div formArrayName="allowances" class="repeat">
+        <div *ngFor="let g of allowancesFA.controls; let i = index" [formGroupName]="i" class="repeat-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Key</mat-label>
+            <input matInput formControlName="key" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Label</mat-label>
+            <input matInput formControlName="label" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" formControlName="amount" min="0" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeAllowance(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button mat-stroked-button color="primary" type="button" (click)="addAllowance()">
+        <mat-icon>add</mat-icon>
+        Add allowance
+      </button>
+    </div>
+
+    <div class="col">
+      <h3>Deductions</h3>
+
+      <div formArrayName="deductions" class="repeat">
+        <div *ngFor="let g of deductionsFA.controls; let i = index" [formGroupName]="i" class="repeat-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Key</mat-label>
+            <input matInput formControlName="key" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Label</mat-label>
+            <input matInput formControlName="label" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" formControlName="amount" min="0" />
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" type="button" (click)="removeDeduction(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button mat-stroked-button color="primary" type="button" (click)="addDeduction()">
+        <mat-icon>add</mat-icon>
+        Add deduction
+      </button>
+    </div>
+  </mat-card>
+
+  <div class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="calculate()"
+      [disabled]="loading() || loadingAttendance() || !attendance()"
+    >
+      Calculate Payroll
+    </button>
+
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      (click)="save()"
+      [disabled]="!result() || loading()"
+    >
+      Save Payroll
+    </button>
+
+    <button
+      mat-raised-button
+      type="button"
+      (click)="openPayslip()"
+      [disabled]="!saved()"
+    >
+      Open Payslip
+    </button>
+  </div>
+</form>
+
+<mat-card *ngIf="result()" class="result">
+  <h3>Payroll Summary</h3>
+
+  <div class="grid-2">
+    <div>
+      <p><strong>Gross:</strong> {{ result()!.gross | number:'1.2-2' }}</p>
+      <p><strong>Tax:</strong> {{ result()!.tax | number:'1.2-2' }}</p>
+      <p><strong>Other Deductions:</strong> {{ result()!.otherDeductions | number:'1.2-2' }}</p>
+      <p><strong>Total Deductions:</strong> {{ result()!.totalDeductions | number:'1.2-2' }}</p>
+      <p><strong>Net Pay:</strong> {{ result()!.net | number:'1.2-2' }}</p>
+    </div>
+
+    <div>
+      <h4>Tax Detail</h4>
+      <ul>
+        <li *ngFor="let t of result()!.items.taxDetail">
+          {{ t.bracket }} - {{ t.amount | number:'1.2-2' }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</mat-card>
+
+<div class="error" *ngIf="errorMsg()">{{ errorMsg() }}</div>

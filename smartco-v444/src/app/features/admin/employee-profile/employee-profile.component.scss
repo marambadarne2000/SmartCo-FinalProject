@@ -1,0 +1,122 @@
+/* Employee profile page layout */
+.employee-profile-page {
+  padding: 24px;
+  max-width: 1100px;
+}
+
+/* Page title spacing */
+.employee-profile-page h1 {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Card container */
+.card {
+  background: #2f2f2f;
+  border: 1px solid #444;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+/* Card headings */
+.card h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Paragraph spacing inside cards */
+.card p {
+  margin: 8px 0;
+  line-height: 1.45;
+}
+
+/* Labels */
+.card strong {
+  display: inline-block;
+  min-width: 140px;
+  color: #eaeaea;
+}
+
+/* Links */
+.card a {
+  color: #7fb7ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
+
+/* Loading text */
+.employee-profile-page > div[ngIf] {
+  opacity: 0.9;
+}
+
+/* CV upload section */
+.cv-upload {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dashed #555;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cv-upload label {
+  margin: 0;
+  color: #eaeaea;
+}
+
+/* File input */
+.cv-upload input[type='file'] {
+  max-width: 320px;
+}
+
+/* Upload button (plain button in your HTML) */
+.cv-upload button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #5a5a5a;
+  background: #3a3a3a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.cv-upload button:hover {
+  background: #444;
+  border-color: #666;
+}
+
+.cv-upload button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Make the professional section look like a neat grid on wide screens */
+@media (min-width: 900px) {
+  .card {
+    overflow: hidden;
+  }
+
+  /* Turn each <p> into a two-column row */
+  .card p {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+
+  /* CV block keeps its own layout */
+  .cv-upload {
+    margin-left: 160px; /* align with values column */
+  }
+}

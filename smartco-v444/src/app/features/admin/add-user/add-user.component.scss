@@ -1,0 +1,10 @@
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px; // מידה בינונית ונוחה
+}
+.full { grid-column: 1 / -1; }
+.half { grid-column: auto; }
+.actions { grid-column: 1 / -1; margin-top: 8px; }
+.error { color: #b00020; margin-top: 8px; }
+.ok { color: #1b5e20; margin-top: 8px; }

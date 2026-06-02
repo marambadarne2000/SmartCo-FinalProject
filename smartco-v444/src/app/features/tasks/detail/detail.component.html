@@ -1,0 +1,30 @@
+<div class="page-head">
+  <a routerLink="/tasks" class="back">⟵ Back to Task List</a>
+  <h2>Task Details #{{ taskId }}</h2>
+</div>
+
+<div class="grid">
+  <section class="card card-info">
+    <ng-container *ngIf="!loading && task; else loadingOrErr">
+      <h3 class="card-title">Task Information</h3>
+      <div class="row"><span class="label">Title:</span> <span class="value">{{ task.name || task.title }}</span></div>
+      <div class="row"><span class="label">Status:</span> <span class="value">{{ task.status }}</span></div>
+      <div class="row"><span class="label">Assignee:</span> <span class="value">{{ task.assignee_name || '—' }}</span></div>
+      <div class="row"><span class="label">Due Date:</span> <span class="value">{{ task.due_date | date:'dd-MM-yyyy' }}</span></div>
+
+      <div class="row column">
+        <span class="label">Description:</span>
+        <div class="desc">{{ task.description || '—' }}</div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadingOrErr>
+      <div class="state" *ngIf="loading">Loading…</div>
+      <div class="state err" *ngIf="!loading && err">{{ err }}</div>
+    </ng-template>
+  </section>
+
+  <section class="card card-chat">
+    <app-task-chat-panel [taskId]="taskId"></app-task-chat-panel>
+  </section>
+</div>

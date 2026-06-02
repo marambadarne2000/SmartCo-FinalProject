@@ -1,0 +1,122 @@
+<!-- src/app/features/tasks/create/create-task.component.html -->
+<h2 mat-dialog-title>{{ isEdit() ? 'Edit Task' : 'New Task' }}</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  class="form"
+  autocomplete="off"
+  novalidate
+  aria-label="Task form"
+>
+  <!-- Project ID -->
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Project ID</mat-label>
+    <input
+      matInput
+      type="number"
+      formControlName="project_id"
+      inputmode="numeric"
+      spellcheck="false"
+      aria-describedby="projectIdHelp"
+    />
+    <mat-hint id="projectIdHelp" *ngIf="isEdit()">Locked in edit mode</mat-hint>
+    <mat-error *ngIf="form.controls.project_id.hasError('required')">Required</mat-error>
+  </mat-form-field>
+
+  <!-- Title -->
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Title</mat-label>
+    <input
+      matInput
+      formControlName="name"
+      required
+      (keydown.enter)="form.valid && save()"
+      spellcheck="false"
+      aria-label="Task title"
+    />
+    <mat-error *ngIf="form.controls.name.hasError('required')">Required</mat-error>
+    <mat-error *ngIf="form.controls.name.hasError('minlength')">Min 3 chars</mat-error>
+    <mat-error *ngIf="form.controls.name.hasError('whitespace')">Cannot be only spaces</mat-error>
+  </mat-form-field>
+
+  <!-- Description -->
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Description</mat-label>
+    <textarea
+      matInput
+      rows="3"
+      formControlName="description"
+      aria-label="Task description"
+    ></textarea>
+  </mat-form-field>
+
+  <!-- Due date -->
+  <mat-form-field appearance="outline" class="half">
+    <mat-label>Due date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      formControlName="due_date"
+      [matDatepickerFilter]="dateNotPast"
+      aria-label="Due date"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Assignee -->
+  <mat-form-field appearance="outline" class="half">
+    <mat-label>Assignee</mat-label>
+    <mat-select formControlName="assignee_id" aria-label="Assignee">
+      <mat-select-trigger>
+        {{ assigneeName() }}
+      </mat-select-trigger>
+
+      <mat-option disabled *ngIf="loadingUsers()">Loading users…</mat-option>
+      <mat-option [value]="null">Unassigned</mat-option>
+      <mat-option *ngFor="let u of users()" [value]="u.id">
+        {{ u.name }} — {{ u.email }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Priority -->
+  <mat-form-field appearance="outline" class="half">
+    <mat-label>Priority</mat-label>
+    <mat-select formControlName="priority" aria-label="Task priority">
+      <mat-option value="low">Low</mat-option>
+      <mat-option value="medium">Medium</mat-option>
+      <mat-option value="high">High</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Status -->
+  <mat-form-field appearance="outline" class="half">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status" aria-label="Task status">
+      <mat-option value="todo">To Do</mat-option>
+      <mat-option value="in_progress">In Progress</mat-option>
+      <mat-option value="done">Done</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Server error -->
+  <div class="error" *ngIf="errorMsg()">
+    {{ errorMsg() }}
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button mat-button type="button" (click)="cancel()" aria-label="Cancel">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || loading()"
+      aria-label="Save Task"
+    >
+      {{ isEdit() ? 'Save' : 'Create' }}
+    </button>
+  </div>
+</form>

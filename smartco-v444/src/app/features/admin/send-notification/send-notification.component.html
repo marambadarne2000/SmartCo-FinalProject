@@ -1,0 +1,32 @@
+<mat-card>
+  <h2>Send Notification</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Message</mat-label>
+      <textarea matInput rows="4" formControlName="message"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Link (optional)</mat-label>
+      <input matInput formControlName="link" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Target Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="all">All Users</mat-option>
+        <mat-option value="admin">Admin</mat-option>
+        <mat-option value="manager">Manager</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" [disabled]="loading">
+      {{ loading ? 'Sending...' : 'Send Notification' }}
+    </button>
+  </form>
+</mat-card>

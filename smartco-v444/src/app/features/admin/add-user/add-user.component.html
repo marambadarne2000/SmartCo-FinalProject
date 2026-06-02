@@ -1,0 +1,48 @@
+<h2>Add User</h2>
+
+<mat-card>
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate class="form">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="form.controls.name.hasError('required')">Required</mat-error>
+      <mat-error *ngIf="form.controls.name.hasError('minlength')">Min 3 chars</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="form.controls.email.hasError('required')">Required</mat-error>
+      <mat-error *ngIf="form.controls.email.hasError('email')">Invalid email</mat-error>
+      <mat-error *ngIf="form.controls.email.hasError('emailTaken')">Email already used</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" />
+      <mat-error *ngIf="form.controls.password.hasError('required')">Required</mat-error>
+      <mat-error *ngIf="form.controls.password.hasError('minlength')">Min 6 chars</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let r of roles" [value]="r">{{ r }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving()">Create</button>
+    </div>
+
+    <div class="error" *ngIf="errorMsg()">{{ errorMsg() }}</div>
+    <div class="ok" *ngIf="successId()">User created with ID {{ successId() }}</div>
+  </form>
+</mat-card>

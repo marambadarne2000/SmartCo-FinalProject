@@ -1,0 +1,66 @@
+<div class="page-head">
+  <h2>Task Message Inbox</h2>
+
+  <div class="filters">
+    <input
+      type="text"
+      [(ngModel)]="q"
+      placeholder="Search by title/message/participants"
+      (keyup.enter)="load()"
+    />
+    <label class="chk">
+      <input type="checkbox" [(ngModel)]="onlyUnread" (change)="load()" />
+      Unread only
+    </label>
+    <button class="btn" (click)="load()">Search</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="list-head">
+    <div class="col col-task">Task</div>
+    <div class="col col-people">Participants</div>
+    <div class="col col-snippet">Last Message</div>
+    <div class="col col-time">Last Update</div>
+    <div class="col col-actions"></div>
+  </div>
+
+  <div *ngIf="loading" class="state">Loading…</div>
+  <div *ngIf="!loading && !data.length" class="state">No conversations</div>
+
+  <div class="row" *ngFor="let r of data">
+    <div class="col col-task">
+      <div class="task-title">{{ r.task_title || ('Task #' + r.task_id) }}</div>
+      <div
+        class="unread"
+        *ngIf="r.unread_count > 0"
+        title="Unread"
+      >
+        {{ unreadBadge(r.unread_count) }}
+      </div>
+    </div>
+
+    <div class="col col-people">
+      {{ participantsText(r) || '—' }}
+    </div>
+
+    <div class="col col-snippet">
+      <ng-container *ngIf="r.last_sender_name; else justText">
+        <span class="sender">{{ r.last_sender_name }}:</span>
+        <span class="text">{{ snippet(r) }}</span>
+      </ng-container>
+      <ng-template #justText>
+        <span class="text">{{ snippet(r) }}</span>
+      </ng-template>
+    </div>
+
+    <div class="col col-time">
+      {{ r.last_at | date:'short' }}
+    </div>
+
+    <div class="col col-actions">
+      <a class="btn small" [routerLink]="['/tasks', r.task_id, 'detail']">Open</a>
+      <a class="btn small" [routerLink]="['/tasks', r.task_id, 'chat']">Chat</a>
+    </div>
+  </div>
+</div>

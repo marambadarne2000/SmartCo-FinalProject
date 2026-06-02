@@ -1,0 +1,45 @@
+<div class="employee-profile-page">
+  <h1>Employee Personal Profile</h1>
+
+  <div *ngIf="loading">Loading profile...</div>
+
+  <ng-container *ngIf="!loading">
+    <section class="card">
+      <h2>Basic Information</h2>
+      <p><strong>ID:</strong> {{ profile.id }}</p>
+      <p><strong>Name:</strong> {{ profile.name || '-' }}</p>
+      <p><strong>Email:</strong> {{ profile.email || '-' }}</p>
+      <p><strong>Role:</strong> {{ profile.role_name || profile.role_slug || '-' }}</p>
+      <p><strong>Status:</strong> {{ profile.status || '-' }}</p>
+    </section>
+
+    <section class="card">
+      <h2>Professional Information</h2>
+      <p><strong>Experience:</strong> {{ profile.experience || '-' }}</p>
+      <p><strong>Bio:</strong> {{ profile.bio || '-' }}</p>
+      <p><strong>Skills:</strong> {{ profile.skills || '-' }}</p>
+      <p><strong>Notes:</strong> {{ profile.notes || '-' }}</p>
+      <p><strong>Department:</strong> {{ profile.department || '-' }}</p>
+      <p><strong>Phone:</strong> {{ profile.phone || '-' }}</p>
+      <p><strong>Address:</strong> {{ profile.address || '-' }}</p>
+
+      <p>
+  <strong>CV:</strong>
+  <ng-container *ngIf="profile.cv; else noCv">
+    <a [href]="profile.cv" target="_blank" rel="noopener">Open CV</a>
+  </ng-container>
+  <ng-template #noCv>-</ng-template>
+</p>
+
+<div class="cv-upload">
+  <label><strong>Upload CV (PDF/DOC/DOCX):</strong></label>
+  <input id="cvFile" type="file" (change)="onCvPicked($event)" />
+  <button (click)="uploadCv()" [disabled]="!cvFile || uploadingCv">
+    {{ uploadingCv ? 'Uploading...' : 'Upload CV' }}
+  </button>
+</div>
+
+      <p><strong>Previous Jobs:</strong> {{ profile.previous_jobs || '-' }}</p>
+    </section>
+  </ng-container>
+</div>

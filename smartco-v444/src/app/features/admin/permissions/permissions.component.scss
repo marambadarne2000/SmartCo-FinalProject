@@ -1,0 +1,28 @@
+/* src/app/features/admin/permissions/permissions.component.scss */
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px 0;
+}
+
+.state { padding: 12px; }
+.state.error { color: #d32f2f; }
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 720px;
+}
+
+th mat-icon { vertical-align: middle; }

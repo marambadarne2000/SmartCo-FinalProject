@@ -1,0 +1,61 @@
+<div class="company-crew-page">
+  <div class="page-header">
+    <h1>Current Employees in the Company</h1>
+    <div class="summary">
+      Total Employees: {{ rows.length }}
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    Loading employees...
+  </div>
+
+  <table class="crew-table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Current Start Time</th>
+        <th>Working Duration</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of rows">
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.role }}</td>
+
+        <td>
+          <select
+            [value]="row.status"
+            (change)="onStatusChange(row, $any($event.target).value)"
+            [disabled]="saving.has(row.id)">
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+            <option value="banned">banned</option>
+          </select>
+        </td>
+
+        <td>{{ row.current_start || '-' }}</td>
+        <td>{{ row.current_duration || '-' }}</td>
+
+        <td>
+          <a
+            mat-stroked-button
+            color="primary"
+            [routerLink]="['/admin/employee-profile', row.id]">
+            View Details
+          </a>
+        </td>
+      </tr>
+
+      <tr *ngIf="!rows.length">
+        <td colspan="7">No employees found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
